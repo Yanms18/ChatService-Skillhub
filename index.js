@@ -1,4 +1,9 @@
-const httpServer = require("http").createServer();
+const express = require("express");
+const app = express();
+
+const http = require("http");
+const httpServer = http.createServer(app);
+
 const Redis = require("ioredis");
 const redisClient = new Redis();
 const io = require("socket.io")(httpServer, {
@@ -20,6 +25,11 @@ const sessionStore = new RedisSessionStore(redisClient);
 
 const { RedisMessageStore } = require("./messageStore");
 const messageStore = new RedisMessageStore(redisClient);
+
+// Example Express route
+app.get("/", (req, res) => {
+  res.send("ChatService is running!");
+});
 
 io.use(async (socket, next) => {
   const sessionID = socket.handshake.auth.sessionID;
